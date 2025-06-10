@@ -34,15 +34,30 @@ public class fMahasiswa extends javax.swing.JFrame {
         this.ListDT();
         tombol(false);
         cBARU.setEnabled(true);
-        txNAMA.setEditable(false);
+        fieldIsian(false);
         
     }
-    
+    private void destroydta(String nim) throws SQLException{
+        Connection cnn = koneksi();
+        if(!cnn.isClosed()){
+            PreparedStatement PS = cnn.prepareStatement("DELETE FROM mhs WHERE NIM = ?;");
+            PS.setString(1, nim);
+            PS.executeUpdate ();
+        }
+        
+    }
     private void tombol(boolean opsi){
         cBARU.setEnabled(opsi);
         cUBAH.setEnabled(opsi);
         cHAPUS.setEnabled(opsi);
+   
     }
+    private void fieldIsian (boolean opsi) {
+        txNIM.setEnabled(opsi);
+        txNAMA.setEnabled(opsi);
+        txALAMAT.setEnabled(opsi);
+    }
+    
     private void cleartextField(){
         txNIM.setText("");
         txNAMA.setText("");
@@ -159,6 +174,11 @@ public class fMahasiswa extends javax.swing.JFrame {
         cHAPUS.setBackground(new java.awt.Color(0, 102, 102));
         cHAPUS.setForeground(new java.awt.Color(255, 255, 255));
         cHAPUS.setText("Hapus");
+        cHAPUS.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cHAPUSActionPerformed(evt);
+            }
+        });
 
         cTUTUP.setBackground(new java.awt.Color(0, 102, 102));
         cTUTUP.setForeground(new java.awt.Color(255, 255, 255));
@@ -264,12 +284,26 @@ public class fMahasiswa extends javax.swing.JFrame {
         txNIM.setText(TM.getValueAt(TM.getSelectedRow(), 0).toString() );
         txNAMA.setText(TM.getValueAt(TM.getSelectedRow(), 1).toString() );
         txALAMAT.setText(TM.getValueAt(TM.getSelectedRow(), 2).toString() );
+        cUBAH.setEnabled(true);
+        cHAPUS.setEnabled(true);
+        
     }//GEN-LAST:event_TMMouseClicked
 
     private void cTUTUPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cTUTUPActionPerformed
         
         System.exit(0);
     }//GEN-LAST:event_cTUTUPActionPerformed
+
+    private void cHAPUSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cHAPUSActionPerformed
+        String nim = txNIM.getText();
+        
+        try {
+            destroydta(nim);
+            ListDT();
+        } catch (SQLException ex) {
+            Logger.getLogger(fMahasiswa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_cHAPUSActionPerformed
 
     /**
      * @param args the command line arguments
